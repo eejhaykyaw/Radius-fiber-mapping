@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fiber Color Logic Tool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Fiber Color Logic Tool</h1>
+
+    <h2>Fiber Number ➜ Color</h2>
+    <label for="fiberNumber">Fiber Number:</label>
+    <input type="number" id="fiberNumber" min="1" />
+    <label for="cableSize">Cable Size:</label>
+    <select id="cableSize">
+      <option value="24">24C</option>
+      <option value="48">48C</option>
+      <option value="96">96C</option>
+      <option value="144">144C</option>
+      <option value="192">192C</option>
+    </select>
+    <button onclick="calculateColor()">Get Color</button>
+    <div class="result" id="colorResult"></div>
+
+    <hr>
+
+    <h2>Color ➜ Fiber Number</h2>
+    <label for="tubeColor">Tube Color:</label>
+    <select id="tubeColor"></select>
+    <label for="fiberColor">Fiber Color:</label>
+    <select id="fiberColor"></select>
+    <label for="cableSize2">Cable Size:</label>
+    <select id="cableSize2">
+      <option value="24">24C</option>
+      <option value="48">48C</option>
+      <option value="96">96C</option>
+      <option value="144">144C</option>
+      <option value="192">192C</option>
+    </select>
+    <button onclick="calculateFiberNumber()">Get Fiber Number</button>
+    <div class="result" id="fiberResult"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
