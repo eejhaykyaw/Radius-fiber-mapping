@@ -3,46 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fiber Color Logic Tool</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Fiber Color Lookup Tool - Radius Standard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .section {
+      margin-bottom: 30px;
+    }
+    .section h2 {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      margin-top: 5px;
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Fiber Color Logic Tool</h1>
+  <h1>Fiber Color Lookup Tool - Radius Standard</h1>
 
-    <h2>Fiber Number ➜ Color</h2>
-    <label for="fiberNumber">Fiber Number:</label>
-    <input type="number" id="fiberNumber" min="1" />
-    <label for="cableSize">Cable Size:</label>
+  <div class="section">
+    <label for="cableSize">Select Cable Size:</label>
     <select id="cableSize">
-      <option value="24">24C</option>
-      <option value="48">48C</option>
-      <option value="96">96C</option>
-      <option value="144">144C</option>
-      <option value="192">192C</option>
+      <option value="24">24F (6×4)</option>
+      <option value="48">48F (8×6)</option>
+      <option value="96">96F (8×12)</option>
+      <option value="192">192F (16×12)</option>
     </select>
-    <button onclick="calculateColor()">Get Color</button>
+  </div>
+
+  <div class="section">
+    <h2>Lookup by Tube & Fiber Number</h2>
+    <label for="tubeNumber">Tube Number:</label>
+    <input type="number" id="tubeNumber" min="1" />
+    <label for="fiberNumber">Fiber Number in Tube:</label>
+    <input type="number" id="fiberNumber" min="1" />
+    <button onclick="lookupColor()">Lookup Color</button>
     <div class="result" id="colorResult"></div>
+  </div>
 
-    <hr>
-
-    <h2>Color ➜ Fiber Number</h2>
+  <div class="section">
+    <h2>Lookup by Fiber Color</h2>
     <label for="tubeColor">Tube Color:</label>
     <select id="tubeColor"></select>
     <label for="fiberColor">Fiber Color:</label>
     <select id="fiberColor"></select>
-    <label for="cableSize2">Cable Size:</label>
-    <select id="cableSize2">
-      <option value="24">24C</option>
-      <option value="48">48C</option>
-      <option value="96">96C</option>
-      <option value="144">144C</option>
-      <option value="192">192C</option>
-    </select>
-    <button onclick="calculateFiberNumber()">Get Fiber Number</button>
+    <button onclick="lookupFiberNumber()">Lookup Fiber Number</button>
     <div class="result" id="fiberResult"></div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const colorSequence = [
+      "Red", "Green", "Blue", "Yellow", "White", "Gray",
+      "Brown", "Violet", "Aqua", "Black", "Orange", "Pink",
+      "Tiger Red", "Tiger Green", "Tiger Blue", "Tiger Yellow"
+    ];
+
+    const cableConfigs = {
+      24: { tubes: 6, fibersPerTube: 4 },
+      48: { tubes: 8, fibersPerTube: 6 },
+      96: { tubes: 8, fibersPerTube: 12 },
+      192: { tubes: 16, fibersPerTube: 12 }
+    };
+
+    const cableSizeSelect = document.getElementById("cableSize");
+
+    function getSelectedConfig() {
+      return cableConfigs[cableSizeSelect.value];
+    }
+
+    function populateColorSelectors() {
+      const config = getSelectedConfig();
+      const tubeSelect = document.getElementById("tubeColor");
+      const fiberSelect = document.getElementById("fiberColor");
+      tubeSelect.innerHTML = "";
+      fiberSelect.innerHTML = "";
+
+      for (let i = 0; i < config.tubes; i++) {
+        const opt = document.createElement("option");
+        opt.value = colorSequence[i];
+        opt.textContent = `${i + 1} - ${colorSequence[i]}`;
+        tubeSelect.appendChild(opt);
+      }
+
+      for (let i = 0; i < config.fibersPerTube; i++) {
+        const opt = document.createElement("option");
+        opt.value = colorSequence[i];
+        opt.textContent = `${i + 1} - ${colorSequence[i]}`;
+        fiberSelect.appendChild(opt);
+      }
+    }
+
+    function lookupColor() {
+      const config = getSelectedConfig();
+      const tubeNumber = parseInt(document.getElementById("tubeNumber").value);
+      const fiberNumber = parseInt(document.getElementById("fiberNumber").value);
+
+      if (
+        tubeNumber >= 1 && tubeNumber <= config.tubes &&
+        fiberNumber >= 1 && fiberNumber <= config.fibersPerTube
+      ) {
+        const tubeColor = colorSequence[tubeNumber - 1];
+        const fiberColor = colorSequence[fiberNumber - 1];
+        document.getElementById("colorResult").innerText =
+          `Tube Color: ${tubeColor}\nFiber Color: ${fiberColor}`;
+      } else {
+        document.getElementById("colorResult").innerText =
+          "Invalid tube or fiber number for the selected cable size.";
+      }
+    }
+
+    function lookupFiberNumber() {
+      const config = getSelectedConfig();
+      const tubeColor = document.getElementById("tubeColor").value;
+      const fiberColor = document.getElementById("fiberColor").value;
+
+      const tubeIndex = colorSequence.indexOf(tubeColor);
+      const fiberIndex = colorSequence.indexOf(fiberColor);
+
+      if (tubeIndex < config.tubes && fiberIndex < config.fibersPerTube) {
+        const absoluteFiberNumber = tubeIndex * config.fibersPerTube + fiberIndex + 1;
+        document.getElementById("fiberResult").innerText =
+          `Fiber Number: ${absoluteFiberNumber}`;
+      } else {
+        document.getElementById("fiberResult").innerText =
+          "Color combination exceeds selected cable configuration.";
+      }
+    }
+
+    cableSizeSelect.addEventListener("change", populateColorSelectors);
+    populateColorSelectors();
+  </script>
+
+  <footer style="margin-top:40px; text-align:center; font-size:small;">
+    Fiber color logic based on Radius Telecom standard. Developed by Erfe Jr Quiao+OpenAI+GitHub. All rights reserved.
+  </footer>
 </body>
 </html>
