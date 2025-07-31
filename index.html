@@ -45,7 +45,7 @@
     <label for="cableSize">Select Cable Size:</label>
     <select id="cableSize">
       <option value="24">24F (6×4)</option>
-      <option value="48">48F (8×6)</option>
+      <option value="48">48F (4×12)</option>
       <option value="96">96F (8×12)</option>
       <option value="192">192F (16×12)</option>
     </select>
@@ -80,7 +80,7 @@
 
     const cableConfigs = {
       24: { tubes: 6, fibersPerTube: 4 },
-      48: { tubes: 8, fibersPerTube: 6 },
+      48: { tubes: 4, fibersPerTube: 12 },
       96: { tubes: 8, fibersPerTube: 12 },
       192: { tubes: 16, fibersPerTube: 12 }
     };
