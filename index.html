@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -37,14 +37,6 @@
       vertical-align: middle;
     }
   </style>
-
-<!-- PWA manifest & meta (add inside <head>) -->
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icons/icon-192.png">
-<meta name="theme-color" content="#2563eb">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-
 </head>
 <body>
   <h1>Fiber Color Code Lookup</h1>
@@ -163,8 +155,8 @@
       const fiberColor = fiberColors[(fiberNumber - 1) % fiberColors.length];
 
       document.getElementById("tubeFiberResult").innerHTML =
-        <div><span class="color-box" style="background:${tubeColor.toLowerCase()}"></span>Tube Color: ${tubeColor}</div>
-         <div><span class="color-box" style="background:${fiberColor.toLowerCase()}"></span>Fiber Color: ${fiberColor}</div>;
+        `<div><span class="color-box" style="background:${tubeColor.toLowerCase()}"></span>Tube Color: ${tubeColor}</div>
+         <div><span class="color-box" style="background:${fiberColor.toLowerCase()}"></span>Fiber Color: ${fiberColor}</div>`;
     }
 
     function lookupByColor() {
@@ -194,7 +186,7 @@
       const fiberNumber = (fiberIndex % config.fibersPerTube) + 1;
 
       document.getElementById("colorResult").innerHTML =
-        Tube Number: ${tubeNumber}, Fiber Number: ${fiberNumber};
+        `Tube Number: ${tubeNumber}, Fiber Number: ${fiberNumber}`;
     }
 
     // Initialize dropdowns
@@ -207,15 +199,5 @@
   Built for fiber techs. Powered by OpenAI × GitHub.<br>
   Fiber logic color coding. © 2025 Erfe Jr Quiao. All rights reserved.
 </footer>
-
-<!-- Service worker registration (add before </body>) -->
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(() => console.log('Service Worker registered'))
-      .catch(err => console.warn('Service Worker registration failed:', err));
-  }
-</script>
-
 </body>
 </html>
