@@ -50,6 +50,13 @@
       <option value="192">192F (16×12)</option>
     </select>
   </div>
+  <div class="section">
+  <label for="standardSelect">Select Color Standard:</label>
+  <select id="standardSelect">
+    <option value="radius">Radius Standard</option>
+    <option value="generic">Generic 12-Color Standard</option>
+  </select>
+</div>
 
   <div class="section">
     <h2>Lookup by Tube & Fiber Number</h2>
@@ -72,12 +79,24 @@
   </div>
 
   <script>
-    const colorSequence = [
-      "Red", "Green", "Blue", "Yellow", "White", "Gray",
-      "Brown", "Violet", "Aqua", "Black", "Orange", "Pink",
-      "Tiger Red", "Tiger Green", "Tiger Blue", "Tiger Yellow"
-    ];
+    const standards = {
+  radius: [
+    "Red", "Green", "Blue", "Yellow", "White", "Gray",
+    "Brown", "Violet", "Aqua", "Black", "Orange", "Pink",
+    "Tiger Red", "Tiger Green", "Tiger Blue", "Tiger Yellow"
+  ],
+  generic: [
+    "Blue", "Orange", "Green", "Brown", "Slate", "White",
+    "Red", "Black", "Yellow", "Violet", "Rose", "Aqua",
+    "Lime", "Pink", "Gray", "Olive"
+  ]
+};
 
+let currentStandard = "radius"; // default
+
+function getColorSequence() {
+  return standards[currentStandard];
+}
     const cableConfigs = {
       24: { tubes: 6, fibersPerTube: 4 },
       48: { tubes: 4, fibersPerTube: 12 },
@@ -100,8 +119,9 @@
 
       for (let i = 0; i < config.tubes; i++) {
         const opt = document.createElement("option");
-        opt.value = colorSequence[i];
-        opt.textContent = `${i + 1} - ${colorSequence[i]}`;
+        const seq = getColorSequence();
+        opt.value = seq[i];
+        opt.textContent = `${i + 1} - ${seq[i]}`;
         tubeSelect.appendChild(opt);
       }
 
@@ -122,8 +142,9 @@
         tubeNumber >= 1 && tubeNumber <= config.tubes &&
         fiberNumber >= 1 && fiberNumber <= config.fibersPerTube
       ) {
-        const tubeColor = colorSequence[tubeNumber - 1];
-        const fiberColor = colorSequence[fiberNumber - 1];
+        const seq = getColorSequence();
+        const tubeColor = seq[tubeNumber - 1];
+        const fiberColor = seq[fiberNumber - 1];
         document.getElementById("colorResult").innerText =
           `Tube Color: ${tubeColor}\nFiber Color: ${fiberColor}`;
       } else {
@@ -137,8 +158,9 @@
       const tubeColor = document.getElementById("tubeColor").value;
       const fiberColor = document.getElementById("fiberColor").value;
 
-      const tubeIndex = colorSequence.indexOf(tubeColor);
-      const fiberIndex = colorSequence.indexOf(fiberColor);
+      const seq = getColorSequence();
+      const tubeIndex = seq.indexOf(tubeColor);
+      const fiberIndex = seq.indexOf(fiberColor);
 
       if (tubeIndex < config.tubes && fiberIndex < config.fibersPerTube) {
         const absoluteFiberNumber = tubeIndex * config.fibersPerTube + fiberIndex + 1;
@@ -152,11 +174,15 @@
 
     cableSizeSelect.addEventListener("change", populateColorSelectors);
     populateColorSelectors();
+    document.getElementById("standardSelect").addEventListener("change", function() {
+  currentStandard = this.value;
+  populateColorSelectors(); // refresh selectors with chosen standard
+});
   </script>
 
   <footer style="text-align: center; font-size: 0.9em; color: #777; padding: 1em 0;">
   Built for fiber techs. Powered by OpenAI × GitHub.<br>
-  Fiber logic follows Radius Telecom’s color coding. © 2025 Erfe Jr Quiao. All rights reserved.
+  Fiber logic color coding. © 2025 Erfe Jr Quiao. All rights reserved.
 </footer>
 </body>
 </html>
